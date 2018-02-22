@@ -1,0 +1,21 @@
+# リポジトリの追加
+sudo rpm -ivh http://packages.groonga.org/centos/groonga-release-1.1.0-1.noarch.rpm
+# パッケージ情報の更新
+sudo yum makecache
+# PEAR、develインストール(PHP7.1)
+sudo yum install --enablerepo=remi-php71 install php-pear php-devel
+# MeCabと辞書データ、mecab-develインストール
+sudo yum install mecab mecab-devel mecab-ipadic
+# githubからphp-mecabをインストール
+cd ~
+git clone https://github.com/rsky/php-mecab.git
+cd php-mecab/mecab
+sudo yum install libtool
+phpize
+./configure
+make
+sudo make installme to mecab-config [no]: と表示されるので、控えたmecab-configのフルパスを入力
+# PHPの設定の追加
+sudo php -r "\$h=fopen('/etc/php.ini','a');fwrite(\$h,'extension=mecab.so'.\"\n\");"
+# apache再起動
+sudo service httpd restart
