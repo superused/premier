@@ -1,4 +1,5 @@
 <?php
+require_once('./Image_QRCode-0.1.3/Image/QRCode.php');
 $url = [
     'http://www.giants.jp/top.html',
     'https://www.amazon.co.jp/dp/B01BHPEC9G',
@@ -6,8 +7,8 @@ $url = [
 ];
 $cnt = 1;
 foreach ($url as $u) {
-    $qrCodeUrl = 'https://chart.apis.google.com/chart?cht=qr&chs=150&chl=' . urlencode($u);
-    $img = file_get_contents($qrCodeUrl);
-    file_put_contents('./img_' . $cnt . '.png', $img);
-    $cnt++;
+    $qr = new Image_QRCode();
+    $img = $qr->makeCode($u, ['output_type' => 'return']);
+    imagepng($img, './img_' . $cnt++ . '.png');
+    imagedestroy($img);
 }
