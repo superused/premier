@@ -78,5 +78,5 @@ if ($error) {
 } else if (count($images) == 10) {
 	echo "succeeded\n";
 } else {
-	echo "not enough failed\n";
+	echo "succeeded(not enough)\n";
 }
