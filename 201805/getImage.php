@@ -1,9 +1,9 @@
 <?php
-define('CONSUMER_KEY', "UhuBsj54DbRnnHGQYaPywHmAi");
-define('CONSUMER_SECRET', "e1zSaGoQorVKzyW5W7U8LaAmkUsf3nnjdIHCxh45Y03bnnBj86");
-define('ACCESS_TOKEN', "42566916-5CI2BDtmiUQdWFKtTY6ajgxmLlYjURI4ftW2K88h3");
-define('ACCESS_TOKEN_SECRET', "YHfdFB1RJxIcHQ6XOriX0GZhmZmFpNmI5wegaBIRDflIU");
-
+// API関連情報はこちらの""の中に設定してください
+define('CONSUMER_KEY', "");
+define('CONSUMER_SECRET', "");
+define('ACCESS_TOKEN', "");
+define('ACCESS_TOKEN_SECRET', "");
 
 $url = "https://api.twitter.com/1.1/search/tweets.json";
 $method = "GET";

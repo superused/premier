@@ -12,6 +12,11 @@ class crawling {
     public $initUrl;
     public $urlDatas = []; // 配列キーにURL、値にタイトルを入れる
 
+    /**
+     * コンストラクタ
+     *
+     * @param $url 最初にクローリングするURL
+     */
     public function __construct($url) {
         $this->initUrl = $url;
         $this->initExecDone = false;
@@ -42,20 +47,24 @@ class crawling {
         // 全てのURLのタイトルを取得するまでクローリングを開始し続ける
         if ($crawlFlg) {
             $this->start($this->urlDatas);
-        } else {
-            // クローリングが終わったらファイルをエクスポート
-            return $this->export();
         }
     }
 
     /**
      * クローリング処理
+     *
+     * @params $url クローリングするURL
      */
     public function exec($url) {
         $html = file_get_contents($url);
+
         $dom = new DOMDocument();
-        @$dom->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', 'sjis'));
+        @$dom->loadHTML($html);
         $xpath = new DOMXPath($dom);
+
+        // タイトル取得
+        $title = $xpath->query('//title')->item(0)->nodeValue;
+        $title = str_replace(PHP_EOL, '', $title); // 改行が全てのページにあるので削除
 
         foreach ($xpath->query('//a') as $node) {
             // aタグのhrefの値を取得する
@@ -75,47 +84,10 @@ class crawling {
         }
 
         if (isset($this->urlDatas[$url])) {
-            // 現在のURLのタイトルを取得する
-            $title = $this->getTitle($html);
             $this->urlDatas[$url] = $title;
 
             // 取得したURL、タイトルを表示
             echo $url . '	' . $title . "\n";
         }
-    }
-
-    /**
-     * HTMLデータからタイトル取得
-     *
-     * @params $html HTMLデータ
-     * @return ページタイトル
-     */
-    public function getTitle($html){
-        $title = '';
-        $match = '@<title>([^<]++)</title>@i';
-        $order = 'ASCII,JIS,UTF-8,CP51932,SJIS-win';
-
-        if (
-            preg_match($match, mb_convert_encoding($html, 'UTF-8', $order), $result) &&
-            isset($result[1])
-        ) {
-            $title = str_replace(PHP_EOL, '', $result[1]); // 改行を削除
-        }
-
-        return $title;
-    }
-
-    /**
-     * ファイルにエクスポート
-     *
-     * @return boolean
-     */
-    public function export() {
-        $view = '';
-        foreach ($this->urlDatas as $url => $title) {
-            $view .= $url . '	' . $title . "\n";
-        }
-
-        return file_put_contents('./crawled_' . date('YmdHis') . '.txt', $view);
     }
 }
